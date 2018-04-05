@@ -4,6 +4,7 @@
 # Imports
 from auth import Auth
 from measures import Measures
+# from track import Tracker
 import pandas as pd
 
 def collectTimeFromTwitter(screen_name):
@@ -17,8 +18,21 @@ def collectTimeFromTwitter(screen_name):
                          tweet.created_at.minute,
                          tweet.created_at.second))
 
-    raw_time.reverse()
+    raw_time.reverse() # Reverse the list
     return raw_time
+
+def collectDateFromTwitter(screen_name):
+    timeline = data.timeline(screen_name, 200)
+
+    date_list = [] # The raw date list
+
+    for tweet in timeline:
+        # Adding a tuple in a list with the date of the tweet
+        date_list.append((tweet.created_at.year,
+                          tweet.created_at.month,
+                          tweet.created_at.day))
+
+    return date_list
 
 # Screen name list
 screen_name_list = []
@@ -32,6 +46,10 @@ for name in names_df['Screen_name']:
 rate = Measures()
 # Instance of Auth object
 data = Auth()
+# # Intance of Tracker object
+# tracker = Tracker("RakinLoL")
+
+# screen_name_list = tracker.getNames() # Return a list of screen_names
 
 _list = [] # List to store the datas in format of a dictionary
 
@@ -55,12 +73,26 @@ for index in range(0, len(screen_name_list)):
         if(value <= upper_threshold and value >= lower_threshold): # If the value is inside of the limits
             final_time_list.append(value)
 
+    # Collect date of tweet from twitter
+    raw_date = collectDateFromTwitter(screen_name)
+    # The day of week post of each tweet
+    day_of_week_list = rate.dayOfTheWeek(raw_date)
+
     ## CREATING A FILE TO STORE THE USER DATAS ##
-    _list.append({'Screen_name': screen_name,
-                  'Length': len(final_time_list),
-                  'Mean': '{:.2f}'.format(rate.mean(final_time_list)),
-                  'Variance': '{:.2f}'.format(rate.variance(final_time_list)),
-                  'Standard_Deviation': '{:.2f}'.format(rate.standardDeviation(rate.variance(final_time_list)))})
+    _list.append({'screen_name': screen_name,
+                  'length': len(final_time_list),
+                  'mean': '{:.2f}'.format(rate.mean(final_time_list)),
+                  'variance': '{:.2f}'.format(rate.variance(final_time_list)),
+                  'standard_deviation': '{:.2f}'.format(rate.standardDeviation(rate.variance(final_time_list))),
+                  'monday': day_of_week_list[0],
+                  'tuesday': day_of_week_list[1],
+                  'wednesday': day_of_week_list[2],
+                  'thursday': day_of_week_list[3],
+                  'friday': day_of_week_list[4],
+                  'saturday': day_of_week_list[5],
+                  'sunday': day_of_week_list[6],
+                  'mean_day_week': '{:.2f}'.format(rate.mean(day_of_week_list)),
+                  'variance_day_week': '{:.2f}'.format(rate.variance(day_of_week_list))})
 
     print("Sucesso", index, "!")
 

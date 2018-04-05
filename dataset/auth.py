@@ -19,10 +19,13 @@ class Auth():
         self.auth.set_access_token(access_token, access_token_secret)
 
         # API object
-        self.api = API(self.auth)
+        self.api = API(self.auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
 
     def timeline(self, s_n, c):
         return Cursor(self.api.user_timeline, screen_name = s_n).items(c)
 
     def user(self, s_n):
         return self.api.get_user(screen_name = s_n)
+
+    def followers(self, s_n, c):
+        return Cursor(self.api.followers, screen_name = s_n).items(c)

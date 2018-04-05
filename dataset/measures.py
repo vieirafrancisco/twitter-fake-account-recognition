@@ -1,6 +1,14 @@
 import numpy as np
+import calendar
 
 class Measures():
+
+    def dayOfTheWeek(self, dates):
+        week_list = [0,0,0,0,0,0,0]
+        for date in dates:
+            week_list[calendar.weekday(date[0], date[1], date[2])] += 1
+
+        return week_list
 
     def turnIntoSeconds(self, times):
         self.hour = 0
