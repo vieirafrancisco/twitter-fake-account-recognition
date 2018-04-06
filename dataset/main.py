@@ -9,7 +9,7 @@ import pandas as pd
 
 NUMBER_TWEETS = 200
 
-def isEmpty(_list):
+def isEmpty(_list): # If the list is empty
     if(_list == []):
         return True
     else:
@@ -131,6 +131,9 @@ for index in range(0, len(screen_name_list)):
 
 # Save file
 df = pd.DataFrame(_list)
+df = df.get(['screen_name', 'id', 'followers', 'friends', 'number_tweets', 'mean', 'variance', 'standard_deviation',
+             'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'mean_day_week', 'variance_day_week',
+             'standard_deviation_day_week', 'number_hashtags', 'hashtag_per_tweet'])
 print(df)
 df.to_csv("csv/dataset.csv")
 print("END")
