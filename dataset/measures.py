@@ -3,12 +3,18 @@ import calendar
 
 class Measures():
 
-    def dayOfTheWeek(self, dates):
-        week_list = [0,0,0,0,0,0,0]
-        for date in dates:
-            week_list[calendar.weekday(date[0], date[1], date[2])] += 1
+    def uniqueHashtag(self, hts):
+        return np.unique(hts)
 
-        return week_list
+    def hashtagPerTweet(self, hts, number_tweets):
+        return len(hts)/number_tweets
+
+    def dayOfTheWeek(self, dates):
+        self.week_list = [0,0,0,0,0,0,0]
+        for date in dates:
+            self.week_list[calendar.weekday(date[0], date[1], date[2])] += 1
+
+        return self.week_list
 
     def turnIntoSeconds(self, times):
         self.hour = 0
@@ -47,3 +53,11 @@ class Measures():
 
     def standardDeviation(self, var): # Variance in argument
         return np.sqrt(var)
+
+    def getNumberTweetsWeek(self, _list):
+        self.number_tweets = 0
+
+        for tweets_day in _list:
+            self.number_tweets += tweets_day
+
+        return self.number_tweets
