@@ -4,7 +4,6 @@
 # Imports
 from auth import Auth
 from measures import Measures
-# from track import Tracker
 import pandas as pd
 
 NUMBER_TWEETS = 200
@@ -19,18 +18,10 @@ def get_timeline_user(screen_name):
     timeline = data.timeline(screen_name, NUMBER_TWEETS)
     return timeline
 
-def collectHashtagFromTwitter(timeline):
-    raw_hashtags = []
-
-    for tweet in timeline:
-        hashtags = tweet.entities['hashtags']
-        if(not isEmpty(hashtags)):
-            raw_hashtags.append(hashtags[0]['text'])
-
-    return raw_hashtags
-
-def collectTimeFromTwitter(timeline):
+def collectData(timeline):
     raw_time = [] # The raw time list
+    raw_hashtags = [] # The raw hashtags list
+    date_list = [] # The raw date list
 
     for tweet in timeline:
         # Adding a tuple in a list with the time divided
@@ -38,19 +29,18 @@ def collectTimeFromTwitter(timeline):
                          tweet.created_at.minute,
                          tweet.created_at.second))
 
-    raw_time.reverse() # Reverse the list
-    return raw_time
+        # Collect the hashtags
+        hashtags = tweet.entities['hashtags']
+        if(not isEmpty(hashtags)):
+            raw_hashtags.append(hashtags[0]['text'])
 
-def collectDateFromTwitter(timeline):
-    date_list = [] # The raw date list
-
-    for tweet in timeline:
         # Adding a tuple in a list with the date of the tweet
         date_list.append((tweet.created_at.year,
                           tweet.created_at.month,
                           tweet.created_at.day))
 
-    return date_list
+    raw_time.reverse() # Reverse the list
+    return (raw_time, date_list, raw_hashtags)
 
 # Screen name list
 screen_name_list = []
@@ -72,12 +62,13 @@ for screen_name in screen_name_list:
     user = data.user(screen_name)
     # Final time list
     final_time_list = []
-    
+
     # Get timeline
     timeline = get_timeline_user(screen_name)
 
-    # Collect data from twitter and store in a list
-    collected_data = collectTimeFromTwitter(timeline)
+    # Collect data from twitter and store in lists
+    collected_data, raw_date, hashtags = collectData(timeline)
+
     # Turn the date in seconds
     seconds = rate.turnIntoSeconds(collected_data)
     # Take the interval of the time of each tweet
@@ -91,8 +82,7 @@ for screen_name in screen_name_list:
         if(value <= upper_threshold and value >= lower_threshold): # If the value is inside of the limits
             final_time_list.append(value)
 
-    # Collect date of tweet from twitter
-    raw_date = collectDateFromTwitter(timeline)
+
     # The day of week post of each tweet
     day_of_week_list = rate.dayOfTheWeek(raw_date)
     # Get the number of tweets in the particular week
@@ -100,8 +90,6 @@ for screen_name in screen_name_list:
     if(number_tweets_week == 0):
         number_tweets_week = 1
 
-    # Collect hashtags in each tweet in twitter
-    hashtags = collectHashtagFromTwitter(timeline)
 
     ## CREATING A FILE TO STORE THE USER DATAS ##
     _list.append({'screen_name': screen_name,
