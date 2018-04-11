@@ -26,6 +26,3 @@ class Auth():
 
     def user(self, s_n):
         return self.api.get_user(screen_name = s_n)
-
-    def followers(self, s_n, c):
-        return Cursor(self.api.followers, screen_name = s_n).items(c)
