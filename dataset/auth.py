@@ -21,8 +21,8 @@ class Auth():
         # API object
         self.api = API(self.auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
 
-    def timeline(self, s_n, c):
-        return Cursor(self.api.user_timeline, screen_name = s_n).items(c)
+    def timeline(self, screen_name, count):
+        return self.api.user_timeline(screen_name = screen_name, count = count)
 
-    def user(self, s_n):
-        return self.api.get_user(screen_name = s_n)
+    def user(self, screen_name):
+        return self.api.get_user(screen_name = screen_name)

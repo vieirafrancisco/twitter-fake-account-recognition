@@ -5,6 +5,8 @@
 from auth import Auth
 from measures import Measures
 import pandas as pd
+import time
+import tweepy
 
 NUMBER_TWEETS = 200
 
@@ -39,13 +41,12 @@ def collectData(timeline):
                           tweet.created_at.month,
                           tweet.created_at.day))
 
-    raw_time.reverse() # Reverse the list
     return (raw_time, date_list, raw_hashtags)
 
 # Screen name list
 screen_name_list = []
 
-names_df = pd.read_csv("csv/teste2.csv", names = ['Screen_name']) # Data frame to screen names
+names_df = pd.read_csv("csv/names2.csv", names = ['Screen_name']) # Data frame to screen names
 
 for name in names_df['Screen_name']:
     screen_name_list.append(name)
@@ -57,31 +58,58 @@ data = Auth()
 
 _list = [] # List to store the datas in format of a dictionary
 
+cont = 1
 for screen_name in screen_name_list:
-    # User caracteristics
-    user = data.user(screen_name)
+    # Loop termination
+    quit = False
     # Final time list
     final_time_list = []
 
+    # User caracteristics
+    try:
+        user = data.user(screen_name)
+    except tweepy.TweepError:
+        print("Failed")
+        continue
+    except tweepy.RateLimitError:
+        print("Rate Limit")
+        for i in range(0, 15):
+            time.sleep(60)
+            print(str(i+1) + " minutes")
+        user = data.user(screen_name)
+
     # Get timeline
-    timeline = get_timeline_user(screen_name)
+    try:
+        timeline = get_timeline_user(screen_name)
+    except tweepy.TweepError:
+        print("Failed")
+        continue
+    except tweepy.RateLimitError:
+        print("Rate Limit")
+        for i in range(0, 15):
+            time.sleep(60)
+            print(str(i+1) + " minutes")
+        timeline = get_timeline_user(screen_name)
 
     # Collect data from twitter and store in lists
     collected_data, raw_date, hashtags = collectData(timeline)
-
     # Turn the date in seconds
     seconds = rate.turnIntoSeconds(collected_data)
     # Take the interval of the time of each tweet
     interval = rate.getIntervals(seconds)
     # Sort the interval list
     interval.sort()
+
+    if(isEmpty(interval)):
+        print("Failed")
+        continue
+
     # Take the thresholds of the interquartil range
     upper_threshold, lower_threshold = rate.limitToOutliers(interval)
     # Creating another list without the outliers
     for value in interval:
         if(value <= upper_threshold and value >= lower_threshold): # If the value is inside of the limits
             final_time_list.append(value)
-
 
     # The day of week post of each tweet
     day_of_week_list = rate.dayOfTheWeek(raw_date)
@@ -90,8 +118,7 @@ for screen_name in screen_name_list:
     if(number_tweets_week == 0):
         number_tweets_week = 1
 
-
-    ## CREATING A FILE TO STORE THE USER DATAS ##
+    # List of dataset information
     _list.append({'screen_name': screen_name,
                   'id': user.id,
                   'followers': user.followers_count,
@@ -111,15 +138,18 @@ for screen_name in screen_name_list:
                   'variance_day_week': '{:.2f}'.format(rate.variance(day_of_week_list)),
                   'standard_deviation_day_week': '{:.2f}'.format(rate.standardDeviation(rate.variance(day_of_week_list))),
                   'number_hashtags': len(rate.uniqueHashtag(hashtags)),
-                  'hashtag_per_tweet': rate.hashtagPerTweet(hashtags, NUMBER_TWEETS)})
+                  'hashtag_per_tweet': rate.hashtagPerTweet(hashtags, NUMBER_TWEETS),
+                  'profile_image_url': str(user.profile_image_url),
+                  'profile_image_url_https': str(user.profile_image_url_https)})
 
-    print("Success")
+    print("Success " + str(cont))
+    cont += 1
 
 # Save file
 df = pd.DataFrame(_list)
 df = df.get(['screen_name', 'id', 'followers', 'friends', 'number_tweets', 'mean', 'variance', 'standard_deviation',
              'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'mean_day_week', 'variance_day_week',
-             'standard_deviation_day_week', 'number_hashtags', 'hashtag_per_tweet'])
+             'standard_deviation_day_week', 'number_hashtags', 'hashtag_per_tweet','profile_image_url','profile_image_url_https'])
 print(df)
-df.to_csv("csv/dataset.csv")
+df.to_csv("csv/dataset2.csv")
 print("END")

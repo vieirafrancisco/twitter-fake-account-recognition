@@ -34,12 +34,15 @@ class Measures():
     def getIntervals(self, values):
         self.interval_list = []
         for i in range(0, len(values) - 1):
-            self.interval_list.append(values[i + 1] - values[i])
+            self.interval_list.append(abs(values[i + 1] - values[i]))
 
         return self.interval_list
 
     def limitToOutliers(self, values):
-        self.quartile_1, self.quartile_3 = np.percentile(values, [25, 75])
+        try:
+            self.quartile_1, self.quartile_3 = np.percentile(values, [25, 75])
+        except:
+            pass
         self.iqr = self.quartile_3 - self.quartile_1
         self.lim_sup = self.quartile_3 + (self.iqr * 1.5)
         self.lim_inf = self.quartile_1 - (self.iqr * 1.5)
