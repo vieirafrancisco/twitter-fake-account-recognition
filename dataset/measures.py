@@ -9,44 +9,30 @@ class Measures():
     def hashtagPerTweet(self, hts, number_tweets):
         return len(hts)/number_tweets
 
-    def dayOfTheWeek(self, dates):
-        self.week_list = [0,0,0,0,0,0,0]
+    def day_of_week(self, dates):
+        week_list = [0,0,0,0,0,0,0]
         for date in dates:
-            self.week_list[calendar.weekday(date[0], date[1], date[2])] += 1
+            week_list[date.weekday()] += 1
 
-        return self.week_list
+        return week_list
 
-    def turnIntoSeconds(self, times):
-        self.hour = 0
-        self.minute = 0
-        self.second = 0
-        self.seconds_list = []
+    def get_intervals(self, datetimes):
+        interval_list = []
+        for i in range(1, len(datetimes)):
+            interval = datetimes[i] - datetimes[i - 1]
+            interval_list.append(interval.total_seconds())
+        return interval_list
 
-        for time in times:
-            self.hour = time[0] * 3600 # Turn hour in seconds
-            self.minute = time[1] * 60 # Turn minute in seconds
-            self.second = time[2]
-
-            self.seconds_list.append(self.hour + self.minute + self.second)
-
-        return self.seconds_list
-
-    def getIntervals(self, values):
-        self.interval_list = []
-        for i in range(0, len(values) - 1):
-            self.interval_list.append(abs(values[i + 1] - values[i]))
-
-        return self.interval_list
-
-    def limitToOutliers(self, values):
+    def limit_iqr(self, values):
         try:
-            self.quartile_1, self.quartile_3 = np.percentile(values, [25, 75])
-        except:
+            quartile_1, quartile_3 = np.percentile(values, [25, 75])
+        except Exception as e:
+            print("Error in iqr function: " + str(e))
             pass
-        self.iqr = self.quartile_3 - self.quartile_1
-        self.lim_sup = self.quartile_3 + (self.iqr * 1.5)
-        self.lim_inf = self.quartile_1 - (self.iqr * 1.5)
-        return self.lim_sup, self.lim_inf
+        iqr = quartile_3 - quartile_1
+        lim_sup = quartile_3 + (iqr * 1.5)
+        lim_inf = quartile_1 - (iqr * 1.5)
+        return lim_sup, lim_inf
 
     def mean(self, _list):
         return np.mean(_list)
@@ -57,10 +43,10 @@ class Measures():
     def standardDeviation(self, var): # Variance in argument
         return np.sqrt(var)
 
-    def getNumberTweetsWeek(self, _list):
-        self.number_tweets = 0
+    def get_number_tweets_week(self, _list):
+        number_tweets = 0
 
         for tweets_day in _list:
-            self.number_tweets += tweets_day
+            number_tweets += tweets_day
 
-        return self.number_tweets
+        return number_tweets
