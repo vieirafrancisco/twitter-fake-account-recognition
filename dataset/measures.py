@@ -5,10 +5,7 @@ class Measures():
 
     def uniqueHashtag(self, hts):
         return np.unique(hts)
-
-    def hashtagPerTweet(self, hts, number_tweets):
-        return len(hts)/number_tweets
-
+        
     def day_of_week(self, dates):
         week_list = [0,0,0,0,0,0,0]
         for date in dates:
@@ -20,7 +17,7 @@ class Measures():
         interval_list = []
         for i in range(1, len(datetimes)):
             interval = datetimes[i] - datetimes[i - 1]
-            interval_list.append(interval.total_seconds())
+            interval_list.append(abs(interval.total_seconds()))
         return interval_list
 
     def limit_iqr(self, values):

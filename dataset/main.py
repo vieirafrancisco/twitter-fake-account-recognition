@@ -9,16 +9,14 @@ import time
 import tweepy
 import datetime
 
-NUMBER_TWEETS = 200
-
-def isEmpty(_list): # If the list is empty
+def is_empty(_list): # If the list is empty
     if(_list == []):
         return True
     else:
         return False
 
 def get_timeline_user(screen_name):
-    timeline = data.timeline(screen_name, NUMBER_TWEETS)
+    timeline = data.timeline(screen_name, 200)
     return timeline
 
 def collectData(timeline):
@@ -37,7 +35,7 @@ def collectData(timeline):
 
         # Collect the hashtags
         hashtags = tweet.entities['hashtags']
-        if(not isEmpty(hashtags)):
+        if(not is_empty(hashtags)):
             raw_hashtags.append(hashtags[0]['text'])
 
         # Adding a tuple in a list with the date of the tweet
@@ -93,15 +91,16 @@ for screen_name in screen_name_list:
             print(str(i+1) + " minutes")
         timeline = get_timeline_user(screen_name)
 
+    # The number of tweets in the user timeline
+    number_tweets = len(timeline)
     # Collect data from twitter and store in lists
     datetime_list, raw_date, hashtags = collectData(timeline)
     # Take the intervals of one tweet to another in seconds
     interval_list = rate.get_intervals(datetime_list)
     # Sort the interval list
     interval_list.sort()
-    print(len(interval_list))
 
-    if(isEmpty(interval_list)):
+    if(is_empty(interval_list)):
         print("Failed")
         continue
 
@@ -125,32 +124,38 @@ for screen_name in screen_name_list:
                   'id': user.id,
                   'followers': user.followers_count,
                   'friends': user.friends_count,
-                  'number_tweets': len(final_time_list),
-                  'mean': '{:.2f}'.format(rate.mean(final_time_list)),
-                  'variance': '{:.2f}'.format(rate.variance(final_time_list)),
-                  'standard_deviation': '{:.2f}'.format(rate.standardDeviation(rate.variance(final_time_list))),
-                  'monday': day_of_week_list[0]/number_tweets_week,
-                  'tuesday': day_of_week_list[1]/number_tweets_week,
-                  'wednesday': day_of_week_list[2]/number_tweets_week,
-                  'thursday': day_of_week_list[3]/number_tweets_week,
-                  'friday': day_of_week_list[4]/number_tweets_week,
-                  'saturday': day_of_week_list[5]/number_tweets_week,
-                  'sunday': day_of_week_list[6]/number_tweets_week,
+                  'number_tweets': number_tweets,
+                  'number_interval_tweets': len(final_time_list),
+                  'mean_interval_tweets': '{:.2f}'.format(rate.mean(final_time_list)),
+                  'variance_interval_tweets': '{:.2f}'.format(rate.variance(final_time_list)),
+                  'standard_deviation_interval_tweets': '{:.2f}'.format(rate.standardDeviation(rate.variance(final_time_list))),
+                  'number_tweets_week': number_tweets_week,
+                  'monday_relative_frequence': day_of_week_list[0]/number_tweets_week,
+                  'tuesday_relative_frequence': day_of_week_list[1]/number_tweets_week,
+                  'wednesday_relative_frequence': day_of_week_list[2]/number_tweets_week,
+                  'thursday_relative_frequence': day_of_week_list[3]/number_tweets_week,
+                  'friday_relative_frequence': day_of_week_list[4]/number_tweets_week,
+                  'saturday_relative_frequence': day_of_week_list[5]/number_tweets_week,
+                  'sunday_relative_frequence': day_of_week_list[6]/number_tweets_week,
                   'mean_day_week': '{:.2f}'.format(rate.mean(day_of_week_list)),
                   'variance_day_week': '{:.2f}'.format(rate.variance(day_of_week_list)),
                   'standard_deviation_day_week': '{:.2f}'.format(rate.standardDeviation(rate.variance(day_of_week_list))),
                   'number_hashtags': len(rate.uniqueHashtag(hashtags)),
-                  'hashtag_per_tweet': rate.hashtagPerTweet(hashtags, NUMBER_TWEETS),
+                  'hashtag_per_tweet': len(rate.uniqueHashtag(hashtags))/number_tweets,
                   'profile_image_url': str(user.profile_image_url),
                   'profile_image_url_https': str(user.profile_image_url_https)})
 
+    print(_list)
     print("Success " + str(cont))
     cont += 1
 
 # Save file
 df = pd.DataFrame(_list)
-df = df.get(['screen_name', 'id', 'followers', 'friends', 'number_tweets', 'mean', 'variance', 'standard_deviation',
-             'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'mean_day_week', 'variance_day_week',
-             'standard_deviation_day_week', 'number_hashtags', 'hashtag_per_tweet','profile_image_url','profile_image_url_https'])
+df = df.get(['screen_name', 'id', 'followers', 'friends', 'number_tweets', 'number_interval_tweets', 'mean_interval_tweets',
+             'variance_interval_tweets', 'standard_deviation_interval_tweets', 'number_tweets_week','monday_relative_frequence',
+             'tuesday_relative_frequence', 'wednesday_relative_frequence', 'thursday_relative_frequence',
+             'friday_relative_frequence', 'saturday_relative_frequence', 'sunday_relative_frequence', 'mean_day_week',
+             'variance_day_week','standard_deviation_day_week','number_hashtags',
+             'hashtag_per_tweet','profile_image_url','profile_image_url_https'])
 df.to_csv("csv/dataset2.csv")
 print("END")
