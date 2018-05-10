@@ -1,5 +1,6 @@
 # Twitter fake account detection
 ## Description:
+The idea is to detect and classificate fake accounts in social media (in special Twitter) to provide eficiente data and well caracterized, to people who need a good material to study data analysis or who wants work with the data to some future project.
 ## Dataset atributes:
     'screen_name': 	                        User screen name
     'id':                                   User id
