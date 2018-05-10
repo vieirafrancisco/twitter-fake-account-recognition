@@ -21,10 +21,9 @@
     'mean_day_week':                        Mean of week day
     'variance_day_week':                    Variance of week day
     'standard_deviation_day_week':          Standard deviation of week day
-    'number_hashtags':                      Hashtags total number in the respective number of tweets
-    'hashtag_per_tweet':                    Number of hashtags divided by the 200 total tweets
+    'number_hashtags':                      Total number of hashtags in the number of tweets
+    'hashtag_per_tweet':                    Number of hashtags divided by the number of tweets
     'profile_image_url':                    The profile image URL
     'profile_image_url_https':              The profile image URL in https
 
 _Obs: The attributes based in tweets it's relative to 200 tweets in the user's timeline, but some accounts don't have this amount of tweets, that is the result will be less than this quantity_
- 
