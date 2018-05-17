@@ -68,31 +68,33 @@ for screen_name in screen_name_list:
     # User caracteristics
     try:
         user = data.user(screen_name)
-    except tweepy.TweepError:
-        print("Failed")
-        continue
     except tweepy.RateLimitError:
         print("Rate Limit")
         for i in range(0, 15):
             time.sleep(60)
             print(str(i+1) + " minutes")
         user = data.user(screen_name)
-
-    # Get timeline
-    try:
-        timeline = get_timeline_user(screen_name)
     except tweepy.TweepError:
         print("Failed")
         continue
+        
+    # Get timeline
+    try:
+        timeline = get_timeline_user(screen_name)
     except tweepy.RateLimitError:
         print("Rate Limit")
         for i in range(0, 15):
             time.sleep(60)
             print(str(i+1) + " minutes")
         timeline = get_timeline_user(screen_name)
+    except tweepy.TweepError:
+        print("Failed")
+        continue
 
     # The number of tweets in the user timeline
     number_tweets = len(timeline)
+    print(number_tweets)
+    print(screen_name)
     # Collect data from twitter and store in lists
     datetime_list, raw_date, hashtags = collectData(timeline)
     # Take the intervals of one tweet to another in seconds
@@ -145,7 +147,6 @@ for screen_name in screen_name_list:
                   'profile_image_url': str(user.profile_image_url),
                   'profile_image_url_https': str(user.profile_image_url_https)})
 
-    print(_list)
     print("Success " + str(cont))
     cont += 1
 
