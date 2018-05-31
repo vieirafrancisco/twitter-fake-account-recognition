@@ -1,8 +1,7 @@
 import tweepy
-import time
 import numpy as np
 import pandas as pd
-import datetime as dt
+import time
 import key
 
 CONSUMER_KEY = key.CONSUMER_KEY
@@ -14,64 +13,60 @@ ACCESS_TOKEN_SECRET = key.ACCESS_TOKEN_SECRET
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
-def get_now_time():
-    now_time = dt.timedelta(hours = dt.datetime.now().hour,
-                            minutes = dt.datetime.now().minute,
-                            seconds = dt.datetime.now().second).total_seconds()
-    return now_time
+class GetNames:
+    def __init__(self, origin_name, api):
+        self.api = api
+        self.names_list = []
+        self.followers_list = []
+        self.all_names = []
+        self.get_users(origin_name)
 
-def is_time(time):
-    now_time = get_now_time()
-    if(time == 0 or abs(time - now_time) >= 850):
-        return True
-    else:
-        return False
+    def get_names_size(self):
+        return len(self.names_list)
 
-def random(obj):
-    index = np.random.randint(0, len(obj))
-    return obj[index]
+    def get_names(self):
+        return self.names_list
 
-def get_users(user_name, api):
-    if(len(user_list) >= 1000):
-        return
+    def random(self, obj):
+        index = np.random.randint(0, len(obj))
+        return obj[index]
 
-    try:
-        user = api.get_user(user_name)
-        timeline = user.timeline(count = 200)
-        print(len(user_list))
+    def get_users(self, user_name):
+        if(self.get_names_size() >= 1000):
+            return
+        try:
+            print(self.get_names_size())
+            user = api.get_user(user_name)
 
-        if(len(timeline) >= 200):
-            global followers_list
-            followers_list = user.followers()
+            # Verify if the number of tweets is more or iqual to 200
+            if(user.statuses_count >= 200):
+                if(user_name not in self.names_list):
+                    self.names_list.append(user_name)
 
-            user_list.append(user.screen_name)
-            info_list.append(user._json)
+            self.followers_list = user.followers()
+            for follower in self.followers_list:
+                follower_name = follower.screen_name
+                self.all_names.append(follower_name) # store all names
+                if(follower.statuses_count >= 200):
+                    if(follower_name not in self.names_list):
+                        self.names_list.append(follower_name)
+        except tweepy.RateLimitError:
+            print("Rate time limite")
+            for i in range(0, 15):
+                time.sleep(60)
+                print("Already passed " + str(i+1) + " minutes.")
+        except tweepy.TweepError:
+            print("Failed")
+        except Exception as e:
+            print(e)
 
-            for follower in followers_list:
-                if(follower.screen_name not in user_list):
-                    user_list.append(follower.screen_name)
-                    info_list.append(follower._json)
-    except tweepy.RateLimitError:
-        print("Number of names:", len(user_list))
-        for i in range(0, 15):
-            time.sleep(60)
-            print("Already passed " + str(i+1) + " minute(s)")
-    except tweepy.TweepError as e:
-        print(e)
-
-    get_users(random(followers_list).screen_name, api)
+        if(len(self.followers_list) == 0):
+            self.get_users(self.random(self.all_names))
+        else:
+            self.get_users(self.random(self.followers_list).screen_name)
 
 api = tweepy.API(auth)
 
-user_list = []
-info_list = []
-followers_list = []
-time1 = 0
-time2 = 0
-get_users('brunoneyo', api)
-print(len(user_list))
-
-df_name = pd.DataFrame(user_list)
-df_name.to_csv('csv/names.csv')
-df = pd.DataFrame(info_list)
-df.to_csv('csv/info.csv')
+names = GetNames('painGamingBR', api)
+df = pd.DataFrame(names.get_names())
+df.to_csv('csv/names2.csv')

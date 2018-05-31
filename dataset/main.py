@@ -48,7 +48,7 @@ def collectData(timeline):
 # Screen name list
 screen_name_list = []
 
-names_df = pd.read_csv("csv/names2.csv", names = ['Screen_name']) # Data frame to screen names
+names_df = pd.read_csv("csv/names.csv", names = ['Screen_name']) # Data frame to screen names
 
 for name in names_df['Screen_name']:
     screen_name_list.append(name)
@@ -77,7 +77,7 @@ for screen_name in screen_name_list:
     except tweepy.TweepError:
         print("Failed")
         continue
-        
+
     # Get timeline
     try:
         timeline = get_timeline_user(screen_name)
@@ -158,5 +158,5 @@ df = df.get(['screen_name', 'id', 'followers', 'friends', 'number_tweets', 'numb
              'friday_relative_frequence', 'saturday_relative_frequence', 'sunday_relative_frequence', 'mean_day_week',
              'variance_day_week','standard_deviation_day_week','number_hashtags',
              'hashtag_per_tweet','profile_image_url','profile_image_url_https'])
-df.to_csv("csv/dataset2.csv")
+df.to_csv("csv/dataset.csv")
 print("END")

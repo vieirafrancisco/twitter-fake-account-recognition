@@ -2,7 +2,7 @@
 from tweepy import OAuthHandler
 from tweepy import API
 from tweepy import Cursor
-from authorization import key
+import key
 
 consumer_key = key.CONSUMER_KEY
 consumer_secret = key.CONSUMER_SECRET
