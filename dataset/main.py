@@ -2,7 +2,7 @@
 # author: Francisco, date: 27/02/2018
 
 # Imports
-from auth import Auth
+from twitter_api import api, TweepError, RateLimitError
 from measures import Measures
 import pandas as pd
 import time
@@ -16,7 +16,7 @@ def is_empty(_list): # If the list is empty
         return False
 
 def get_timeline_user(screen_name):
-    timeline = data.timeline(screen_name, 200)
+    timeline = api.user_timeline(screen_name=screen_name, count=200)
     return timeline
 
 def collectData(timeline):
@@ -57,8 +57,6 @@ for name in names_df['Screen_name']:
 
 # Instance of Measures object
 rate = Measures()
-# Instance of Auth object
-data = Auth()
 
 _list = [] # List to store the datas in format of a dictionary
 
