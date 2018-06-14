@@ -35,7 +35,7 @@ def get_users(user):
     except RateLimitError:
         for i in range(15):
             time.sleep(60)
-            print('Already passed ' + str(i+1) + ' minutes')
+            print('In get_users function: Already passed ' + str(i+1) + ' minutes')
     except TweepError as e:
         print(e)
 
