@@ -11,7 +11,7 @@ import numpy as np
 
 # Console output data
 def console_output(screen_name, intervals):
-    print('Screen_name: ' + str(screen_name) + ' Number intervals: ' + str(intervals))
+    print('Screen_name: ' + str(screen_name) + ', Number intervals: ' + str(intervals))
 
 # List to store the datas in format of a dictionary
 _list = [] 
@@ -74,6 +74,7 @@ for user in users:
         })
     
     console_output(screen_name, len(intervals))
+    print(number_tweets_wk)
 
 # Save file
 df = pd.DataFrame(_list)

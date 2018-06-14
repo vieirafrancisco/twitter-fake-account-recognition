@@ -8,17 +8,18 @@ NUMBER_STATUSES = 200
 
 # Return a user timeline
 def user_timeline(screen_name):
+    timeline = []
     try:
-        #timeline = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
-        # Try to iterate with the timeline (if don't, get a exception)
-        #timeline.page_iterator.next()
-        timeline = api.user_timeline(screen_name=screen_name, count=NUMBER_STATUSES)
+        values = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
+        for tweet in values:
+            timeline.append(tweet)
     except RateLimitError:
         for i in range(15):
             time.sleep(60)
             print('In user_timeline function: Already passed ' + str(i+1) + ' minutes')
-        #timeline = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
-        timeline = api.user_timeline(screen_name=screen_name, count=NUMBER_STATUSES)
+        values = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
+        for tweet in values:
+            timeline.append(tweet)
     except TweepError as e:
         if(e.args[0] == 'Twitter error response: status code = 401'):
             print('Not authorized access in this user timeline: status code = 401')
