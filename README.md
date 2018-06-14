@@ -7,7 +7,7 @@ The idea is to detect and classificate fake accounts in social media (in special
     'followers':                            Number of followers
     'friends':                              Number of friends
     'number_tweets':                        Number of tweets analized
-    'number_interval_tweets':               Number of intervals from one tweet to another
+    'number_tweets_intervals':              Number of intervals from one tweet to another
     'mean_interval_tweets':                 Mean of tweet's intervals
     'variance_interval_tweets':             Variance of tweet's intervals
     'standard_deviation_interval_tweets':   Standard deviation of tweet's intervals
@@ -27,4 +27,4 @@ The idea is to detect and classificate fake accounts in social media (in special
     'profile_image_url':                    The profile image URL
     'profile_image_url_https':              The profile image URL in https
 
-_Obs: The attributes based in tweets it's relative to 200 tweets in the user's timeline, but some accounts don't have this amount of tweets, that is the result will be less than this quantity_
+_Obs: The attributes based in tweets it's relative to 200 tweets in the user's timeline_
