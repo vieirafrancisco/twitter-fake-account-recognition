@@ -1,49 +1,45 @@
 import numpy as np
-import calendar
 
-class Measures():
+def days_of_week(dates):
+    week_list = [0,0,0,0,0,0,0]
+    for date in dates:
+        week_list[date] += 1
 
-    def uniqueHashtag(self, hts):
-        return np.unique(hts)
-        
-    def day_of_week(self, dates):
-        week_list = [0,0,0,0,0,0,0]
-        for date in dates:
-            week_list[date.weekday()] += 1
+    return week_list
 
-        return week_list
+def tweets_in_week(values):
+    number_tweets = 0
+    for value in values:
+        number_tweets += value
+    return number_tweets
 
-    def get_intervals(self, datetimes):
-        interval_list = []
-        for i in range(1, len(datetimes)):
-            interval = datetimes[i] - datetimes[i - 1]
-            interval_list.append(abs(interval.total_seconds()))
-        return interval_list
+# Get the intevals from one tweet to another
+def get_intervals(datetimes):
+    interval_list = []
+    for i in range(len(datetimes)-1, 0, -1):
+        interval = datetimes[i] - datetimes[i - 1]
+        interval = interval.total_seconds()
+        interval_list.append(abs(interval))
+    print('IW:', str(len(interval_list)))
+    # Get the limits of the values from interquartil range
+    lim_sup, lim_inf = limit_iqr(interval_list)
+    # List of intervals without the outliers
+    intervals = eliminate_outliers((lim_sup, lim_inf), interval_list)
+    return intervals
 
-    def limit_iqr(self, values):
-        try:
-            quartile_1, quartile_3 = np.percentile(values, [25, 75])
-        except Exception as e:
-            print("Error in iqr function: " + str(e))
-            pass
-        iqr = quartile_3 - quartile_1
-        lim_sup = quartile_3 + (iqr * 1.5)
-        lim_inf = quartile_1 - (iqr * 1.5)
-        return lim_sup, lim_inf
+# Return the interquartil range limits
+def limit_iqr(values):
+    quartile_1, quartile_3 = np.percentile(values, [25, 75])
+    iqr = quartile_3 - quartile_1
+    lim_sup = quartile_3 + (iqr * 1.5)
+    lim_inf = quartile_1 - (iqr * 1.5)
+    return lim_sup, lim_inf
 
-    def mean(self, _list):
-        return np.mean(_list)
-
-    def variance(self, _list):
-        return np.var(_list)
-
-    def standardDeviation(self, var): # Variance in argument
-        return np.sqrt(var)
-
-    def get_number_tweets_week(self, _list):
-        number_tweets = 0
-
-        for tweets_day in _list:
-            number_tweets += tweets_day
-
-        return number_tweets
+# Eliminate the outliers of a list of values
+def eliminate_outliers(limites, values):
+    without_outliers = []
+    lim_sup, lim_inf = limites
+    for value in values:
+        if(value <= lim_sup and value >= lim_inf):
+            without_outliers.append(value)
+    return without_outliers
