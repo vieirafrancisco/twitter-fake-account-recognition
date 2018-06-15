@@ -22,6 +22,9 @@ screen_name = 'brunoneyo'
 first_user = api.get_user(screen_name=screen_name)
 # Get users
 get_users(first_user)
+# Names dataframe
+names_df = pd.DataFrame(users)
+names_df.to_csv('csv/names_false.csv')
 
 for user in users:
     # Screen name

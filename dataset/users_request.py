@@ -18,12 +18,13 @@ def random(obj):
     return obj[index]
 
 def get_users(user):
-    if(len(users) > 5):
+    if(len(users) > 2000):
         return
     try:
         # Append user object
         if(is_able(user) and user not in users):
             users.append(user)
+            print('.')
 
         # Get followers from user
         followers = user.followers()
@@ -32,7 +33,9 @@ def get_users(user):
         for follower in followers:
             if(is_able(follower) and follower not in users):
                 users.append(follower)
+                print('.')
     except RateLimitError:
+        print(len(users))
         for i in range(15):
             time.sleep(60)
             print('In get_users function: Already passed ' + str(i+1) + ' minutes')

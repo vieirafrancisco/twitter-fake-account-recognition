@@ -17,6 +17,7 @@ def user_timeline(screen_name):
         for i in range(15):
             time.sleep(60)
             print('In user_timeline function: Already passed ' + str(i+1) + ' minutes')
+        timeline = []
         values = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
         for tweet in values:
             timeline.append(tweet)
