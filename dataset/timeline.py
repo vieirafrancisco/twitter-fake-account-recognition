@@ -6,24 +6,35 @@ import time
 # Number of tweets from analysis
 NUMBER_STATUSES = 200
 
+# Get timeline with cursor
+def get_timeline(screen_name):
+    timeline = []
+    values = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
+    for tweet in values:
+        timeline.append(tweet)
+    return timeline
+
+# Wait 15 minutes
+def waiting_time():
+    for i in range(15):
+        time.sleep(60)
+        print('Already passed ' + str(i+1) + ' minutes')
+
 # Return a user timeline
 def user_timeline(screen_name):
-    timeline = []
     try:
-        values = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
-        for tweet in values:
-            timeline.append(tweet)
-    except RateLimitError:
-        for i in range(15):
-            time.sleep(60)
-            print('In user_timeline function: Already passed ' + str(i+1) + ' minutes')
-        timeline = []
-        values = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
-        for tweet in values:
-            timeline.append(tweet)
+        timeline = get_timeline(screen_name)
     except TweepError as e:
-        if(e.args[0] == 'Twitter error response: status code = 401'):
-            print('Not authorized access in this user timeline: status code = 401')
+        # String of the exception message
+        msg = e.args[0]
+        # Rate time limit: status code = 429
+        if(msg == 'Twitter error response: status code = 429'):
+            waiting_time()
+            timeline = get_timeline(screen_name)
+            return timeline
+        # Not authorized: status code = 401
+        elif(msg == 'Twitter error response: status code = 401'):
+            print('Not authorized')
         else:
             print(e)
         return 0
