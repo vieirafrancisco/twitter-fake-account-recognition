@@ -28,3 +28,7 @@ The idea is to detect and classificate fake accounts in social media (in special
     'profile_image_url_https':              The profile image URL in https
 
 _Obs: The attributes based in tweets it's relative to 200 tweets in the user's timeline_
+
+## Account requisite:
+    Language: 'pt-br'
+    Number of statuses: >= 200
