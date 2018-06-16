@@ -18,7 +18,7 @@ def random(obj):
     return obj[index]
 
 def get_users(user):
-    if(len(users) > 2000):
+    if(len(users) > 500):
         return
     try:
         # Append user object

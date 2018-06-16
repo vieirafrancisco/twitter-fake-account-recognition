@@ -38,6 +38,9 @@ def user_timeline(screen_name):
         else:
             print(e)
         return 0
+    except Exception as e:
+        print(e)
+        return 0
     return timeline
 
 # Return a list of tweets
