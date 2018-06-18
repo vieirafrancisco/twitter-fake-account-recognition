@@ -17,7 +17,7 @@ def console_output(screen_name, intervals):
 _list = [] 
 
 # Fisrt user screen name
-screen_name = 'nilmoretto'
+screen_name = 'yunnikimbeta'
 # First user
 first_user = api.get_user(screen_name=screen_name)
 # Get users
@@ -28,7 +28,7 @@ for user in users:
     names.append(user.screen_name)
 # Names dataframe
 names_df = pd.DataFrame(names)
-names_df.to_csv('csv/names_true.csv')
+names_df.to_csv('csv/names_false2.csv')
 
 for user in users:
     # Screen name
@@ -93,5 +93,5 @@ df = df.get([
     'variance_day_week','standard_deviation_day_week','number_hashtags',
     'hashtag_per_tweet','profile_image_url','profile_image_url_https'
     ])
-df.to_csv("csv/dataset_true.csv")
+df.to_csv("csv/dataset_false2.csv")
 print("END")

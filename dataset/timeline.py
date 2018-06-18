@@ -2,6 +2,7 @@ from twitter_api import api, Cursor, TweepError, RateLimitError
 import datetime
 import calendar
 import time
+import ssl
 
 # Number of tweets from analysis
 NUMBER_STATUSES = 200
@@ -29,6 +30,7 @@ def user_timeline(screen_name):
         msg = e.args[0]
         # Rate time limit: status code = 429
         if(msg == 'Twitter error response: status code = 429'):
+            print('Rate time limit')
             waiting_time()
             timeline = get_timeline(screen_name)
             return timeline
@@ -38,9 +40,14 @@ def user_timeline(screen_name):
         else:
             print(e)
         return 0
+    # ssl.SSLError (Try to handle)
+    except ssl.SSLError as e:
+        print(e)
+        return 0
     except Exception as e:
         print(e)
         return 0
+        
     return timeline
 
 # Return a list of tweets

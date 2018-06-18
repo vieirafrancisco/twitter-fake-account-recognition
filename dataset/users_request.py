@@ -24,7 +24,7 @@ def get_users(user):
         # Append user object
         if(is_able(user) and user not in users):
             users.append(user)
-            print('.')
+            print(user.screen_name)
 
         # Get followers from user
         followers = user.followers()
@@ -33,13 +33,15 @@ def get_users(user):
         for follower in followers:
             if(is_able(follower) and follower not in users):
                 users.append(follower)
-                print('.')
+                print(follower.screen_name)
     except RateLimitError:
         print(len(users))
         for i in range(15):
             time.sleep(60)
             print('In get_users function: Already passed ' + str(i+1) + ' minutes')
     except TweepError as e:
+        print(e)
+    except Exception as e:
         print(e)
 
     if(len(users) == 0):
