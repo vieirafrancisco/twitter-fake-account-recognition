@@ -5,7 +5,7 @@
 from twitter_api import api
 from timeline import NUMBER_STATUSES, user_timeline, get_datetimes, get_dates, number_hashtags, number_tweets_with_hashtags
 from measures import get_intervals, days_of_week, tweets_in_week
-from users_request import get_users, users
+from users_request import get_users, users, names
 import pandas as pd
 import numpy as np
 
@@ -17,18 +17,14 @@ def console_output(screen_name, intervals):
 _list = [] 
 
 # Fisrt user screen name
-screen_name = 'yunnikimbeta'
+screen_name = 'brunoneyo'
 # First user
 first_user = api.get_user(screen_name=screen_name)
 # Get users
 get_users(first_user)
-# Names
-names = []
-for user in users:
-    names.append(user.screen_name)
 # Names dataframe
 names_df = pd.DataFrame(names)
-names_df.to_csv('csv/names_false2.csv')
+names_df.to_csv('csv/names_false.csv')
 
 for user in users:
     # Screen name
@@ -37,6 +33,7 @@ for user in users:
     timeline = user_timeline(screen_name)
     # In case of error returns 0
     if(timeline == 0):
+        print("Timeline error")
         continue
 
     # Intervals of one tweet to another
@@ -93,5 +90,5 @@ df = df.get([
     'variance_day_week','standard_deviation_day_week','number_hashtags',
     'hashtag_per_tweet','profile_image_url','profile_image_url_https'
     ])
-df.to_csv("csv/dataset_false2.csv")
+df.to_csv("csv/dataset_false.csv")
 print("END")

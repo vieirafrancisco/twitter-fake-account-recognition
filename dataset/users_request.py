@@ -4,13 +4,14 @@ import time
 
 # Users object list
 users = []
+# Screen names list
+names = []
 
-# Able
-def is_able(user):
-    if(user.statuses_count >= 200 and user.lang == 'pt'):
-        return True
-    else:
-        return False
+# User need have 200 or more posts and the language need to be portuguese
+def add_data(user):
+    if(user.statuses_count >= 200 and user.lang == 'pt' and user.screen_name not in names):
+        users.append(user)
+        names.append(user.screen_name)
 
 # Random object
 def random(obj):
@@ -21,19 +22,15 @@ def get_users(user):
     if(len(users) > 500):
         return
     try:
-        # Append user object
-        if(is_able(user) and user not in users):
-            users.append(user)
-            print(user.screen_name)
+        # Append user object and screen name
+        add_data(user)
 
         # Get followers from user
         followers = user.followers()
 
-        # Append followers user object
+        # Append followers user object and screen name
         for follower in followers:
-            if(is_able(follower) and follower not in users):
-                users.append(follower)
-                print(follower.screen_name)
+            add_data(follower)
     except RateLimitError:
         print(len(users))
         for i in range(15):
