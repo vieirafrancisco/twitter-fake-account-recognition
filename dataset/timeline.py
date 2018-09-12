@@ -8,31 +8,31 @@ import ssl
 NUMBER_STATUSES = 200
 
 # Get timeline with cursor
-def get_timeline(screen_name):
+def get_timeline(user_id):
     timeline = []
-    values = Cursor(api.user_timeline, screen_name=screen_name).items(NUMBER_STATUSES)
+    values = Cursor(api.user_timeline, id=user_id).items(NUMBER_STATUSES)
     for tweet in values:
         timeline.append(tweet)
     return timeline
 
 # Wait 15 minutes
 def waiting_time():
+    print('Time Limit!')
     for i in range(15):
         time.sleep(60)
-        print('Already passed ' + str(i+1) + ' minutes')
+        print(str(15-i+1)+' minutes left')
 
 # Return a user timeline
-def user_timeline(screen_name):
+def user_timeline(id):
     try:
-        timeline = get_timeline(screen_name)
+        timeline = get_timeline(user_id=id)
     except TweepError as e:
         # String of the exception message
         msg = e.args[0]
         # Rate time limit: status code = 429
         if(msg == 'Twitter error response: status code = 429'):
-            print('Rate time limit')
             waiting_time()
-            timeline = get_timeline(screen_name)
+            timeline = get_timeline(user_id=id)
             return timeline
         # Not authorized: status code = 401
         elif(msg == 'Twitter error response: status code = 401'):

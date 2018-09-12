@@ -5,36 +5,28 @@
 from twitter_api import api
 from timeline import user_timeline, number_hashtags, number_tweets_with_hashtags
 from measures import get_intervals, days_of_week, tweets_in_week
-from users_request import get_users, users, names
+from users_request import get_users, users
 import pandas as pd
 import numpy as np
-
-# Console output data
-def console_output(screen_name, num_intervals, num_tweets):
-    print(
-        'Screen_name: ' + str(screen_name) +
-        ', Number tweets: ' + str(num_tweets) +
-        ', Number intervals: ' + str(num_intervals)
-        )
 
 # List to store the datas in format of a dictionary
 _list = [] 
 
 # Fisrt user screen name
-screen_name = 'nilmoretto'
+screen_name = 'LeigoGaming'
 # First user
 first_user = api.get_user(screen_name=screen_name)
 # Get users
 get_users(first_user)
-# Names dataframe
-names_df = pd.DataFrame(names)
-names_df.to_csv('csv/names_true.csv')
 
 for user in users:
     # Screen name
     screen_name = user.screen_name
+    # user id
+    user_id = user.id
     # Timeline
-    timeline = user_timeline(screen_name)
+    timeline = user_timeline(user_id)
+    
     # In case of error returns 0
     if(timeline == 0):
         print("Timeline error")
@@ -56,7 +48,7 @@ for user in users:
     # List of dataset information
     _list.append({
         'screen_name': screen_name,
-        'id': user.id,
+        'id': user_id,
         'followers': user.followers_count,
         'friends': user.friends_count,
         'number_tweets': number_tweets,
@@ -80,7 +72,7 @@ for user in users:
         'profile_image_url_https': str(user.profile_image_url_https)
         })
     
-    console_output(screen_name, len(intervals), number_tweets)
+    print(screen_name, len(intervals), number_tweets)
 
 # Save file
 df = pd.DataFrame(_list)
@@ -92,5 +84,6 @@ df = df.get([
     'variance_day_week','standard_deviation_day_week','number_hashtags',
     'hashtag_per_tweet','profile_image_url','profile_image_url_https'
     ])
-df.to_csv("csv/dataset_true.csv")
-print("END")
+#df.to_csv("csv/dataset_true.csv")
+#print("END")
+print(df)

@@ -4,14 +4,16 @@ import time
 
 # Users object list
 users = []
-# Screen names list
-names = []
+
+# Users ids
+users_id = []
 
 # User need have 200 or more posts and the language need to be portuguese
 def add_data(user):
-    if(user.statuses_count >= 200 and user.lang == 'pt' and user.screen_name not in names):
+    user_id = user.id
+    if(user.statuses_count >= 200 and user.lang == 'pt' and user_id not in users_id):
         users.append(user)
-        names.append(user.screen_name)
+        users_id.append(user_id)
 
 # Random object
 def random(obj):
@@ -19,7 +21,7 @@ def random(obj):
     return obj[index]
 
 def get_users(user):
-    if(len(users) > 500):
+    if(len(users) > 50):
         return
     try:
         # Append user object and screen name
@@ -35,7 +37,7 @@ def get_users(user):
         print(len(users))
         for i in range(15):
             time.sleep(60)
-            print('In get_users function: Already passed ' + str(i+1) + ' minutes')
+            print(str(15-i+1)+' minutes left')
     except TweepError as e:
         print(e)
     except Exception as e:
