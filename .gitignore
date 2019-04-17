@@ -3,3 +3,9 @@ __pycache__
 auth.cpython-36.pyc
 measures.cpython-36.pyc
 key.cpython-36.pyc
+
+# twitter api key
+api_key.yaml
+
+# csv files in resultset folder
+resultset/*.csv
