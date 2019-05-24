@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Contas Falsas no Twitter</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/serif.css">
+		<link rel="stylesheet" href="css/custom.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2>Reconhecimento de Contas Falsas no Twitter<h2>
+				</section>
+				<section>
+					<div>
+						<p> Um pouco sobre mim: </p>
+						<ul>
+							<li> Meu nome é <b>Francisco</b></li>
+							<li> Ncex: Laboratorio de Inteligência Computacional Aplicada (LICA)</li>
+							<li> 5º periodo de CC </li>
+						</ul>
+					</div>
+				</section>
+				<section>
+					<p>Objetivo:</p>
+					<ul>
+						<li> Apresentar minha pesquisa no LICA </li>
+						<li> Explicar um pouco sobre metodologia cientifica </li>
+						<li> Apresentar um pouco de Aprendizagem de Máquina </li>
+					</ul>
+				</section>
+				<section>
+					<section>Aprendizagem de Máquina <br>(Machine Learning)</br></section>
+					<section>
+						<p>Classificação</p>
+
+						<div class="row">
+							<div class="column">
+								<img src="img/gato.jpg">
+								<p>Gato</p>
+							</div>
+							<div class="column">
+								<img src="img/cachorro.jpg">
+								<p>Cachorro</p>
+							</div>
+						</div>
+
+					</section>
+					<section>Conta Legítima x Conta Falsa</section>
+					<section><img src="img/AM_diagrama.png"></section>
+				</section>
+				<section>
+					<section>Processo de Metodologia Cientifica</section>
+					<section><b>Problema:</b> Identificar/Reconhecer contas falsas no Twitter</section>
+					<section>
+							Perguntas:</br></br>
+							<ul>
+								<li>Que tipo de dados devo coletar?</li>
+								<li>Quais dados são mais importantes?</li>
+								<li>Quais as diferenças entre contas legítimas e contas falsas?</li>
+								<li><b>Quais são as características de uma conta falsa? como se comporta?</b></li>
+								<li><b>Como coletar os dados?</b></li>
+							</ul>
+					</section>
+					<section>
+						Características de contas falsas podem ser descritas conforme seu objetivo:</br></br>
+						<ul>
+							<li>Postar informações repetididas (links, frases de efeito)</li>
+							<li>Disseminar informações falsas</li>
+							<li>Servir para inflar o número de seguidores de outra conta</li>
+							<li>Produzir muitas postagens em um curto periodo de tempo</li>
+						</ul>
+					</section>
+					<section>
+						<div class="row">
+							<div class="column">
+								<img src="img/Imagem1.png">
+							</div>
+							<div class="column">
+								<img src="img/Imagem2.png">	
+							</div>
+						</div>
+					</section>
+					<section>
+							<div class="row">
+								<div class="column">
+									<img src="img/Imagem3.png">
+								</div>
+					</section>
+					<section>
+							<p>Metodologias</p>
+							<img src="img/metodologias.png">
+					</section>
+					<section>
+							<p>Metodologias</p>
+							<img src="img/metodologias2.png">
+					</section>
+					<section>
+						Os atributos são baseados em:</br></br>
+						<ul>
+							<li>Intervalo de postagens</li>
+							<li>Frequência Relativa dos dias da semana</li>
+							<li>Hashtags (conteúdo textual)</li>
+						</ul>
+					</section>
+					<section>
+						Como coletar os dados?</br></br>
+						<ul>
+							<li>Twitter API</li>
+							<li>Tweepy - Biblioteca facilitadora da API do Twitter</li>
+						</ul>
+					</section>
+					<section>
+						<ul>
+							<li>Coletar dados: <a href="https://github.com/vieirafrancisco/collect-twitter-data">https://github.com/vieirafrancisco/collect-twitter-data</a></li>
+							<li>Pré-processamento: <a href="https://github.com/vieirafrancisco/twitter-behavioral">https://github.com/vieirafrancisco/twitter-behavioral</a></li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						Algoritmos de Machine Learning:</br></br>
+						<ul>
+							<li>MLP</li>
+							<li>Random Forest</li>
+							<li>K-means</li>
+						</ul>
+					</section>
+					<section>Treino e métricas de performance</section>
+				</section>
+				<section>
+					/vieirafrancisco</br>
+					Obrigado!
+				</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
